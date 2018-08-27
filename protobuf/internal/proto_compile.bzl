@@ -314,14 +314,11 @@ def _build_base_namespace(run, builder):
 def _build_importmappings(run, builder):
   """Override behavior to add plugin options before building the --go_out option"""
   ctx = run.ctx
-  go_prefix = run.data.go_prefix or run.lang.go_prefix
   opts = []
 
   # Build the list of import mappings.  Start with any configured on
   # the rule by attributes.
   mappings = run.lang.importmap + run.data.importmap
-  mappings += _get_mappings(run.data.protos, run.data.label, go_prefix)
-
   # Then add in the transitive set from dependent rules.
   for unit in run.data.transitive_units:
     mappings += unit.transitive_mappings
@@ -588,12 +585,6 @@ def _proto_compile_impl(ctx):
     for unit in dep.proto_compile_result.transitive_units:
         transitive_units.append(unit)
 
-  if ctx.attr.go_prefix:
-    go_prefix = ctx.attr.go_prefix.go_prefix
-  elif ctx.attr.go_importpath:
-    go_prefix = ctx.attr.go_importpath
-  else:
-    go_prefix = ""
 
 
   # Make the proto list.
@@ -624,7 +615,6 @@ def _proto_compile_impl(ctx):
   data = struct(
     label = ctx.label,
     workspace_name = ctx.workspace_name,
-    go_prefix = go_prefix,
     go_package = ctx.attr.go_package,
     execdir = execdir,
     protos = protos,
@@ -692,7 +682,7 @@ def _proto_compile_impl(ctx):
       _build_output_libdir(run, builder)
     else:
       _build_output_files(run, builder)
-    if run.lang.go_prefix or ctx.attr.go_importpath: # golang-specific
+    if ctx.attr.go_importpath: # golang-specific
       _build_importmappings(run, builder)
     if run.lang.supports_pb:
       _build_protobuf_invocation(run, builder)
