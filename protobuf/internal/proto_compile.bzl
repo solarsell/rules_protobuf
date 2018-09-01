@@ -523,11 +523,12 @@ cd $(bazel info execution_root)%s && \
     for i in range(len(outputs)):
       print(" > output%s: %s" % (i, outputs[i]))
 
-  ctx.action(
+  ctx.actions.run_shell(
     mnemonic = "ProtoCompile",
     command = " && ".join(cmds),
     inputs = inputs,
     outputs = outputs,
+    use_default_shell_env = True,
   )
 
 
