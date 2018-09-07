@@ -82,8 +82,8 @@ yarn_modules(
 
 github_archive(
     name = "io_bazel_rules_python",
-    commit = "8b5d0683a7d878b28fffe464779c8a53659fc645",
-    org = "bazelbuild",
+    commit = "ff1310f550533dc17af55cdb78a30d7853a63431",
+    org = "solarfund",
     repo = "rules_python",
     sha256 = "40499c0a9d55f0c5deb245ed24733da805f05aaf6085cb39027ba486faf1d2e1",
 )
